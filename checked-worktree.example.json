@@ -1,0 +1,5 @@
+{
+  "root": ".",
+  "include": ["checked_worktree.py", "tests"],
+  "junit_report": "/tmp/checked-worktree-junit.xml"
+}
