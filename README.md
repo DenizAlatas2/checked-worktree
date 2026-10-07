@@ -7,18 +7,18 @@
 Requires Python 3.9+ and no third-party packages.
 
 ```sh
-python checked_worktree.py run \
+python3 -B checked_worktree.py run \
   --config checked-worktree.example.json \
   --name "unit tests" \
   --json /tmp/unit-tests.json \
   --markdown /tmp/unit-tests.md \
-  -- python -m unittest discover
+  -- python3 -B -m unittest discover -s tests -v
 
-python checked_worktree.py compare /tmp/unit-tests.json
-python demo.py
+python3 -B checked_worktree.py compare /tmp/unit-tests.json
+python3 -B demo.py
 ```
 
-The command after `--` is an argument list passed directly to `subprocess.run` with shell interpretation disabled. Select the exact scope in the JSON configuration. Keep receipt files outside that scope. If `junit_report` is configured, the report is counted only when it exists and changes after this invocation starts; an unchanged old report is marked `stale-or-unattributed`. Invalid, missing, stale, or unconfigured reports have unknown counts, distinct from a valid report with zero tests.
+The command after `--` is an argument list passed directly to `subprocess.run` with shell interpretation disabled. The explicit `-s tests` is needed because the test directory is not a Python package; plain `unittest discover` from the repository root can report success after running zero tests. Confirm the test output says `Ran N tests` with `N > 0`; `-B` prevents bytecode cache files from changing the selected scope. This quick start deliberately has no JUnit report, so its receipt says `JUnit: not-configured` and records unknown test counts. The separate synthetic demo shows a valid JUnit report and a later changed comparison. Select the exact scope in the JSON configuration, and keep receipt files outside it. When `junit_report` is configured, the report is counted only when it exists and changes after this invocation starts; an unchanged old report is marked `stale-or-unattributed`. Invalid, missing, stale, or unconfigured reports have unknown counts, distinct from a valid report with zero tests.
 
 ```json
 {
@@ -43,7 +43,7 @@ The working name was `DoneReceipt`; the descriptive repository name is `checked-
 ## Development
 
 ```sh
-python -m unittest discover -s tests -v
+python3 -B -m unittest discover -s tests -v
 ```
 
 MIT licensed; see [LICENSE](LICENSE). All examples and demo files are synthetic.
